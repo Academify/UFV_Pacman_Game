@@ -50,7 +50,10 @@ ALLEGRO_EVENT_QUEUE* event_queue = NULL;
 ALLEGRO_TIMER* timer = NULL;
 ALLEGRO_BITMAP* wall = NULL;
 ALLEGRO_BITMAP* pill = NULL;
-ALLEGRO_BITMAP* ghost = NULL;
+ALLEGRO_BITMAP* ghost1 = NULL;
+ALLEGRO_BITMAP* ghost2 = NULL;
+ALLEGRO_BITMAP* ghost3 = NULL;
+ALLEGRO_BITMAP* ghost4 = NULL;
 ALLEGRO_BITMAP* pacman = NULL;
 int i = 15, j = 12; //posicao inicial do Pacman na matriz
 int q = 20; //tamanho de cada celula no mapa
@@ -62,6 +65,46 @@ bool redraw = true;
 bool sair = false;
 int pontos = 0;
 
+// Variável que guarda de a jogada foi feita ou não
+bool jogada = false;
+
+// Variáveis dos tipos de jogadas de cada fantasma
+int v1 = 0, v2 =0, v3 = 0, v4 = 0;
+
+//Posições iniciais dos fantasmas
+// Fantasma 1
+int g1i = 1;
+int g1j = 1;
+
+// Fantasma 2
+int g2i = 1;
+int g2j = 23;
+
+// Fantasma 3
+int g3i = 23;
+int g3j = 1;
+
+// Fantasma 4
+int g4i = 23;
+int g4j = 23;
+
+//Marcador de posição dos fantasmas
+//Fantasma 1
+int g1posy = g1i * q;
+int g1posx = g1j * q;
+
+//Fantasma 2
+int g2posy = g2i * q;
+int g2posx = g2j * q;
+
+//Fantasma 3
+int g3posy = g3i * q;
+int g3posx = g3j * q;
+
+//Fantasma 1
+int g4posy = g4i * q;
+int g4posx = g4j * q;
+// -------------------------------------------------------------------------------------------
 void carregarMapa() {
 	for(int i = 0; i < 26; i++) {
 		for(int j = 0; j < 26; j++) {
@@ -78,8 +121,21 @@ void carregarMapa() {
 					al_draw_bitmap(pill, j * q, i * q, 0);
 				}
 			}
-			if((i == 1 && j == 1) || (i == 1 && j == 23) || (i == 23 && j == 1) || (i == 23 && j == 23)) {
+			/* if((i == 1 && j == 1) || (i == 1 && j == 23) || (i == 23 && j == 1) || (i == 23 && j == 23)) {
 				al_draw_bitmap(ghost, j * q, i * q, 0);
+			} */
+			if(i == g1i && j == g1j){
+    			al_draw_bitmap(ghost1, g1posx, g1posy, 0);
+			}
+			if(i == g2i && j == g2j){
+    			al_draw_bitmap(ghost2, g2posx, g2posy, 0);
+			}
+			if(i == g3i && j == g3j){
+    			al_draw_bitmap(ghost3, g3posx, g3posy, 0);
+			}
+			// Fantasma 4 deve ser inteligente
+			if(i == 23 && j == 23){
+    			al_draw_bitmap(ghost4, j * q, i * q, 0);
 			}
 		}
 	}
@@ -161,7 +217,10 @@ int inicializa() {
 
 	wall = al_create_bitmap(q, q);
 	pill = al_load_bitmap("pill.tga");
-	ghost = al_load_bitmap("ghost.tga");
+	ghost1 = al_load_bitmap("ghost.tga");
+	ghost2 = al_load_bitmap("ghost.tga");
+	ghost3 = al_load_bitmap("ghost.tga");
+	ghost4 = al_load_bitmap("ghost.tga");
 	if(!wall || !pill) {
 		al_destroy_display(display);
 		al_destroy_timer(timer);
@@ -185,46 +244,243 @@ int inicializa() {
 
 	return 1;
 }
+//--------------------------------------------------------------------------------------------
+// Essa função verifica se o movimento que o fantasma aleatório deseja fazer é possível
+bool possivel(int jog, int i, int j){
+	switch (jog){
+	case 0:
+		if(MAPA[i - 1][j] != '1'){
+			return true;
+		}else{
+			return false;
+		}
+		break;
+	case 1:
+		if(MAPA[i + 1][j] != '1'){
+			return true;
+		}else{
+			return false;
+		}
+		break;
+	case 2:
+		if(MAPA[i][j - 1] != '1'){ 
+			return true;
+		}else{
+			return false;
+		}
+		break;
+	case 3:
+		if(MAPA[i][j + 1] != '1'){
+			return true;
+		}else{
+			return false;
+		}
+		break;
+	default:
+		break;
+	}
+}
+//--------------------------------------------------------------------------------------------
 
-int main(int argc, char** argv)
-{
+// Funções de movimentação dos fantasmas aleatórios ------------------------------------------
+void movimentaG1(){
+	bool jogadaRealizada = false;
+	bool jogadaPossivel = false;
+
+	while(!jogadaRealizada){
+		inicio:
+		jogadaPossivel = possivel(v1, g1i, g1j);
+		if(jogadaPossivel){
+			goto joga;
+		}else{
+			v1 = rand() % 4;
+			goto inicio;
+		}
+		// ---------------------------------------------------------------------------------------------
+		joga:
+		switch(v1){
+		case 0:
+			g1i--;
+			g1posy = g1i * q;
+			ghost1 = al_load_bitmap("ghost.tga");
+			//verificaMorto();
+			v1 = 0;
+			jogadaRealizada = true;
+			break;
+		case 1:
+			g1i++;
+			g1posy = g1i * q;
+			ghost1 = al_load_bitmap("ghost.tga");
+			//verificaMorto();
+			v1=1;
+			jogadaRealizada = true;
+			break;
+		case 2:
+			g1j--;
+			g1posx = g1j * q;
+			ghost1 = al_load_bitmap("ghost.tga"); 
+			//verificaMorto();
+			v1=2;
+			jogadaRealizada = true;
+			break;
+		case 3:
+			g1j++;
+			g1posx = g1j * q;
+			ghost1 = al_load_bitmap("ghost.tga"); 
+			//verificaMorto();
+			v1=3;
+			jogadaRealizada = true;
+			break;		
+		}
+	}
+}
+void movimentaG2(){
+	bool jogadaRealizada = false;
+	bool jogadaPossivel = false;
+
+	while(!jogadaRealizada){
+		inicio:
+		jogadaPossivel = possivel(v2, g2i, g2j);
+		if(jogadaPossivel){
+			goto joga;
+		}else{
+			v2 = rand() % 4;
+			goto inicio;
+		}
+		// ---------------------------------------------------------------------------------------------
+		joga:
+		switch(v2){
+		case 0:
+			g2i--;
+			g2posy = g2i * q;
+			ghost2 = al_load_bitmap("ghost.tga");
+			//verificaMorto();
+			v2 = 0;
+			jogadaRealizada = true;
+			break;
+		case 1:
+			g2i++;
+			g2posy = g2i * q;
+			ghost2 = al_load_bitmap("ghost.tga");
+			//verificaMorto();
+			v2=1;
+			jogadaRealizada = true;
+			break;
+		case 2:
+			g2j--;
+			g2posx = g2j * q;
+			ghost2 = al_load_bitmap("ghost.tga"); 
+			//verificaMorto();
+			v2=2;
+			jogadaRealizada = true;
+			break;
+		case 3:
+			g2j++;
+			g2posx = g2j * q;
+			ghost2 = al_load_bitmap("ghost.tga"); 
+			//verificaMorto();
+			v2=3;
+			jogadaRealizada = true;
+			break;		
+		}
+	}
+}
+void movimentaG3(){
+	bool jogadaRealizada = false;
+	bool jogadaPossivel = false;
+
+	while(!jogadaRealizada){
+		inicio:
+		jogadaPossivel = possivel(v3, g3i, g3j);
+		if(jogadaPossivel){
+			goto joga;
+		}else{
+			v3 = rand() % 4;
+			goto inicio;
+		}
+		// ---------------------------------------------------------------------------------------------
+		joga:
+		switch(v3){
+		case 0:
+			g3i--;
+			g3posy = g3i * q;
+			ghost3 = al_load_bitmap("ghost.tga");
+			//verificaMorto();
+			v3 = 0;
+			jogadaRealizada = true;
+			break;
+		case 1:
+			g3i++;
+			g3posy = g3i * q;
+			ghost3 = al_load_bitmap("ghost.tga");
+			//verificaMorto();
+			v3=1;
+			jogadaRealizada = true;
+			break;
+		case 2:
+			g3j--;
+			g3posx = g3j * q;
+			ghost3 = al_load_bitmap("ghost.tga"); 
+			//verificaMorto();
+			v3=2;
+			jogadaRealizada = true;
+			break;
+		case 3:
+			g3j++;
+			g3posx = g3j * q;
+			ghost3 = al_load_bitmap("ghost.tga"); 
+			//verificaMorto();
+			v3=3;
+			jogadaRealizada = true;
+			break;		
+		}
+	}
+}
+//--------------------------------------------------------------------------------------------
+
+int main(int argc, char** argv){
 	if(!inicializa()) {
 		return -1;
 	}
-
 	while(!sair && pontos != 2530) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
-
 		if(ev.type == ALLEGRO_EVENT_TIMER) {
 			if(key[KEY_UP] && MAPA[i - 1][j] != '1') {
 				i--;
 				posy = i * q;
 				pacman = al_load_bitmap("pacmanup.tga");
+				jogada = true;
 			}
-
 			if(key[KEY_DOWN] && MAPA[i + 1][j] != '1') {
 				i++;
 				posy = i * q;
 				pacman = al_load_bitmap("pacmandown.tga");
+				jogada = true;
 			}
-
 			if(key[KEY_LEFT] && MAPA[i][j - 1] != '1') {
 				j--;
 				posx = j * q;
 				pacman = al_load_bitmap("pacmanleft.tga");
+				jogada = true;
 			}
-
 			if(key[KEY_RIGHT] && MAPA[i][j + 1] != '1') {
 				j++;
 				posx = j * q;
 				pacman = al_load_bitmap("pacmanright.tga");
+				jogada = true;
 			}
-
 			redraw = true;
+			if(jogada == true){
+				movimentaG1();
+				movimentaG2();
+				movimentaG3();
+				//movimentaG4();
+			}
 		} else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			break;
 		} else if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+
 			switch(ev.keyboard.keycode) {
 				case ALLEGRO_KEY_UP:
 					key[KEY_UP] = true;
@@ -275,6 +531,7 @@ int main(int argc, char** argv)
 			al_draw_bitmap(pacman, posx, posy, 0);
 			al_flip_display();
 		}
+
 	}
 
 	if(pontos == 2530) {
@@ -288,7 +545,10 @@ int main(int argc, char** argv)
 	al_destroy_bitmap(wall);
 	al_destroy_bitmap(pacman);
 	al_destroy_bitmap(pill);
-	al_destroy_bitmap(ghost);
+	al_destroy_bitmap(ghost1);
+	al_destroy_bitmap(ghost2);
+	al_destroy_bitmap(ghost3);
+	al_destroy_bitmap(ghost4);
 	al_destroy_timer(timer);
 	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
