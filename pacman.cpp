@@ -4,6 +4,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -281,6 +282,15 @@ bool possivel(int jog, int i, int j){
 	}
 }
 //--------------------------------------------------------------------------------------------
+// Função que calcula a distância entre o pacman e o fantasma
+
+int calculaDistancia(){
+	int distancia = 0;
+
+	distancia = sqrt(pow((posx - g4posx),2)+ pow((posy - g4posy),2));
+
+	return distancia;
+}
 
 // Funções de movimentação dos fantasmas aleatórios ------------------------------------------
 void movimentaG1(){
@@ -435,6 +445,29 @@ void movimentaG3(){
 			break;		
 		}
 	}
+}
+void movimentaG4(){
+	bool jogadaRealizada = false;
+	bool jogadaPossivel = false;
+	while(!jogadaRealizada){
+		inicio:
+		jogadaPossivel = possivel(v4, g4i, g4j);
+		if(jogadaPossivel){
+			//goto joga;
+		}else{
+			v3 = rand() % 4;
+			goto inicio;
+		}
+		// Tenho que arrumar um jeito de fazer o fantaasma achar o melhor caminho
+		/* Possibilidades:
+			- Tentar igualar o x com o do pacman por meio de um for (testando jogada por jogada) do x onde ele tá até o x do pacman e depois fazer o mesmo com o y.
+			-
+		
+		 */
+		//joga:
+
+	}
+
 }
 //--------------------------------------------------------------------------------------------
 
