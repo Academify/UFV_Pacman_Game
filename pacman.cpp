@@ -66,6 +66,8 @@ bool redraw = true;
 bool sair = false;
 int pontos = 0;
 
+bool morto = false;
+
 // Variável que guarda de a jogada foi feita ou não
 bool jogada = false;
 
@@ -135,8 +137,8 @@ void carregarMapa() {
     			al_draw_bitmap(ghost3, g3posx, g3posy, 0);
 			}
 			// Fantasma 4 deve ser inteligente
-			if(i == 23 && j == 23){
-    			al_draw_bitmap(ghost4, j * q, i * q, 0);
+			if(i == g4i && j == g4j){
+    			al_draw_bitmap(ghost4, g4posx, g4posy, 0);
 			}
 		}
 	}
@@ -245,6 +247,19 @@ int inicializa() {
 
 	return 1;
 }
+void verificaMorto(){
+	if(!morto){
+		if (posx == g1posx && posy == g1posy){
+			morto = true;
+		}else if(posx == g2posx && posy == g2posy){
+			morto = true;
+		}else if(posx == g3posx && posy == g3posy){
+			morto = true;
+		}else if(posx == g4posx && posy == g4posy){
+			morto = true;
+		}
+	}
+}
 //--------------------------------------------------------------------------------------------
 // Essa função verifica se o movimento que o fantasma aleatório deseja fazer é possível
 bool possivel(int jog, int i, int j){
@@ -313,7 +328,7 @@ void movimentaG1(){
 			g1i--;
 			g1posy = g1i * q;
 			ghost1 = al_load_bitmap("ghost.tga");
-			//verificaMorto();
+			verificaMorto();
 			v1 = 0;
 			jogadaRealizada = true;
 			break;
@@ -321,7 +336,7 @@ void movimentaG1(){
 			g1i++;
 			g1posy = g1i * q;
 			ghost1 = al_load_bitmap("ghost.tga");
-			//verificaMorto();
+			verificaMorto();
 			v1=1;
 			jogadaRealizada = true;
 			break;
@@ -329,7 +344,7 @@ void movimentaG1(){
 			g1j--;
 			g1posx = g1j * q;
 			ghost1 = al_load_bitmap("ghost.tga"); 
-			//verificaMorto();
+			verificaMorto();
 			v1=2;
 			jogadaRealizada = true;
 			break;
@@ -337,7 +352,7 @@ void movimentaG1(){
 			g1j++;
 			g1posx = g1j * q;
 			ghost1 = al_load_bitmap("ghost.tga"); 
-			//verificaMorto();
+			verificaMorto();
 			v1=3;
 			jogadaRealizada = true;
 			break;		
@@ -364,7 +379,7 @@ void movimentaG2(){
 			g2i--;
 			g2posy = g2i * q;
 			ghost2 = al_load_bitmap("ghost.tga");
-			//verificaMorto();
+			verificaMorto();
 			v2 = 0;
 			jogadaRealizada = true;
 			break;
@@ -372,7 +387,7 @@ void movimentaG2(){
 			g2i++;
 			g2posy = g2i * q;
 			ghost2 = al_load_bitmap("ghost.tga");
-			//verificaMorto();
+			verificaMorto();
 			v2=1;
 			jogadaRealizada = true;
 			break;
@@ -380,7 +395,7 @@ void movimentaG2(){
 			g2j--;
 			g2posx = g2j * q;
 			ghost2 = al_load_bitmap("ghost.tga"); 
-			//verificaMorto();
+			verificaMorto();
 			v2=2;
 			jogadaRealizada = true;
 			break;
@@ -388,7 +403,7 @@ void movimentaG2(){
 			g2j++;
 			g2posx = g2j * q;
 			ghost2 = al_load_bitmap("ghost.tga"); 
-			//verificaMorto();
+			verificaMorto();
 			v2=3;
 			jogadaRealizada = true;
 			break;		
@@ -415,7 +430,7 @@ void movimentaG3(){
 			g3i--;
 			g3posy = g3i * q;
 			ghost3 = al_load_bitmap("ghost.tga");
-			//verificaMorto();
+			verificaMorto();
 			v3 = 0;
 			jogadaRealizada = true;
 			break;
@@ -423,7 +438,7 @@ void movimentaG3(){
 			g3i++;
 			g3posy = g3i * q;
 			ghost3 = al_load_bitmap("ghost.tga");
-			//verificaMorto();
+			verificaMorto();
 			v3=1;
 			jogadaRealizada = true;
 			break;
@@ -431,7 +446,7 @@ void movimentaG3(){
 			g3j--;
 			g3posx = g3j * q;
 			ghost3 = al_load_bitmap("ghost.tga"); 
-			//verificaMorto();
+			verificaMorto();
 			v3=2;
 			jogadaRealizada = true;
 			break;
@@ -439,7 +454,7 @@ void movimentaG3(){
 			g3j++;
 			g3posx = g3j * q;
 			ghost3 = al_load_bitmap("ghost.tga"); 
-			//verificaMorto();
+			verificaMorto();
 			v3=3;
 			jogadaRealizada = true;
 			break;		
@@ -447,16 +462,91 @@ void movimentaG3(){
 	}
 }
 void movimentaG4(){
-	bool jogadaRealizada = false;
+	/* bool jogadaRealizada = false;
 	bool jogadaPossivel = false;
+	cout << "Tá no 1" << endl;
+	int distancia = calculaDistancia();
 	while(!jogadaRealizada){
+		cout << "Tá no 2" << endl;
 		inicio:
-		jogadaPossivel = possivel(v4, g4i, g4j);
-		if(jogadaPossivel){
-			//goto joga;
-		}else{
-			v3 = rand() % 4;
-			goto inicio;
+		cout << "Tá no 3" << endl;
+		if(!jogadaPossivel){
+			cout << "Tá no 4" << endl;
+			cout << "Tá no 5" << endl;
+			sort:
+			v4 = rand() % 4;
+			cout << "Tá no 6" << endl;
+		} */
+		// ---------------------------------------------------------------------------------------------
+
+		/* if(g4posy < posy){
+			v4 = 0;
+			testa1:
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			
+			if (jogadaPossivel){
+				g4i--;
+				g4posy = g4i * q;
+				ghost4 = al_load_bitmap("ghost.tga");
+				verificaMorto();
+				v4 = 0;
+				jogadaRealizada = true;
+			}else{
+				v4 = rand() % 4;
+				goto testa1;
+			}
+								
+		}else if(g4posy > posy){
+			cout << "Teste 2" << endl;
+			v4 = 1;
+			testa2:
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			if (jogadaPossivel){
+				g4i++;
+				g4posy = g4i * q;
+				ghost4 = al_load_bitmap("ghost.tga");
+				verificaMorto();
+				v4=1;
+				jogadaRealizada = true;
+				break;
+			}else{
+				v4 = rand() % 4;
+				goto testa2;
+			}
+		}else if(g4posx < posx){
+			cout << "Teste 3" << endl;
+			v4 = 2;
+			testa3:
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			if (jogadaPossivel){
+				g4i++;
+				g4posy = g4i * q;
+				ghost4 = al_load_bitmap("ghost.tga");
+				verificaMorto();
+				v4=2;
+				jogadaRealizada = true;
+				break;
+			}else{
+				v4 = rand() % 4;
+				goto testa3;
+			}
+		}else if(g4posx > posx){
+			cout << "Teste 4" << endl;
+			v4 = 3;
+			testa4:
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			if (jogadaPossivel){
+				g4i++;
+				g4posy = g4i * q;
+				ghost4 = al_load_bitmap("ghost.tga");
+				verificaMorto();
+				v4=3;
+				jogadaRealizada = true;
+				break;
+			}else{
+				v4 = rand() % 4;
+				goto testa4;
+			} 
 		}
 		// Tenho que arrumar um jeito de fazer o fantaasma achar o melhor caminho
 		/* Possibilidades:
@@ -465,8 +555,7 @@ void movimentaG4(){
 		
 		 */
 		//joga:
-
-	}
+	//}
 
 }
 //--------------------------------------------------------------------------------------------
@@ -475,7 +564,7 @@ int main(int argc, char** argv){
 	if(!inicializa()) {
 		return -1;
 	}
-	while(!sair && pontos != 2530) {
+	while(!sair && pontos != 2530 && !morto) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
 		if(ev.type == ALLEGRO_EVENT_TIMER) {
@@ -508,6 +597,7 @@ int main(int argc, char** argv){
 				movimentaG1();
 				movimentaG2();
 				movimentaG3();
+				cout << "Veio aqui!" << endl;
 				//movimentaG4();
 			}
 		} else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
@@ -566,7 +656,12 @@ int main(int argc, char** argv){
 		}
 
 	}
-
+	if(morto) {
+		fonte = al_load_font("arial.ttf", 48, 0);
+		al_draw_text(fonte, al_map_rgb(255, 255, 255), SCREEN_W / 2, 215, ALLEGRO_ALIGN_CENTRE, "VOCÊ PERDEU!");
+		al_flip_display();
+		al_rest(5.0);
+	}
 	if(pontos == 2530) {
 		fonte = al_load_font("arial.ttf", 48, 0);
 		al_draw_text(fonte, al_map_rgb(255, 255, 255), SCREEN_W / 2, 215, ALLEGRO_ALIGN_CENTRE, "VOCE VENCEU!");
