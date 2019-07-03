@@ -802,6 +802,51 @@ void movimentaG4(){
 				}
 			}
 		}
+		if(posx == g4posx){
+			if(posx < g4posx){
+				v4 = 0;
+				jogadaPossivel = possivel(v4, g4i, g4j);
+				if(jogadaPossivel){
+					movimenta4(jogadaPossivel, jogadaRealizada);
+				}else{
+					v4 = rand() % 10;
+					if(v4%2 == 0){
+						v4 = 2;
+						jogadaPossivel = possivel(v4, g4i, g4j);
+						if(jogadaPossivel){
+							movimenta4(jogadaPossivel, jogadaRealizada);
+						}
+					}else{
+						v4 = 3;
+						jogadaPossivel = possivel(v4, g4i, g4j);
+						if(jogadaPossivel){
+							movimenta4(jogadaPossivel, jogadaRealizada);
+						}
+					}
+				}
+			}else{
+				v4 = 1;
+				jogadaPossivel = possivel(v4, g4i, g4j);
+				if(jogadaPossivel){
+					movimenta4(jogadaPossivel, jogadaRealizada);
+				}else{
+					v4 = rand() % 10;
+					if(v4%2 == 0){
+						v4 = 0;
+						jogadaPossivel = possivel(v4, g4i, g4j);
+						if(jogadaPossivel){
+							movimenta4(jogadaPossivel, jogadaRealizada);
+						}
+					}else{
+						v4 = 1;
+						jogadaPossivel = possivel(v4, g4i, g4j);
+						if(jogadaPossivel){
+							movimenta4(jogadaPossivel, jogadaRealizada);
+						}
+					}
+				}
+			}
+		}
 	}
 } 
 
