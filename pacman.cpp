@@ -107,6 +107,8 @@ int g3posx = g3j * q;
 //Fantasma 1
 int g4posy = g4i * q;
 int g4posx = g4j * q;
+
+const int DIST_MENOR =10;
 // -------------------------------------------------------------------------------------------
 void carregarMapa() {
 	for(int i = 0; i < 26; i++) {
@@ -305,6 +307,46 @@ int calculaDistancia(){
 	distancia = sqrt(pow((posx - g4posx),2)+ pow((posy - g4posy),2));
 
 	return distancia;
+}
+
+void movimenta4(bool jogadaPossivel, bool &jogadaRealizada){
+	if(v4 == 0){
+		if(jogadaPossivel){
+			g4i--;
+			g4posy = g4i * q;
+			ghost4 = al_load_bitmap("ghost.tga");
+			verificaMorto();
+			v4 = 0;
+			jogadaRealizada = true;
+		}
+	}else if(v4 == 1){
+		if(jogadaPossivel){
+			g4i++;
+			g4posy = g4i * q;
+			ghost4 = al_load_bitmap("ghost.tga");
+			verificaMorto();
+			v4=1;
+			jogadaRealizada = true;
+		}
+	}else if(v4 == 2){
+		if(jogadaPossivel){
+			g4j--;
+			g4posx = g4j * q;
+			ghost4 = al_load_bitmap("ghost.tga");
+			verificaMorto();
+			v4=2;
+			jogadaRealizada = true;
+		}
+	}else if(v4 == 3){
+		if(jogadaPossivel){
+			g4j++;
+			g4posx = g4j * q;
+			ghost4 = al_load_bitmap("ghost.tga");
+			verificaMorto();
+			v4=3;
+			jogadaRealizada = true;
+		}
+	}
 }
 
 // Funções de movimentação dos fantasmas aleatórios ------------------------------------------
@@ -556,8 +598,215 @@ void movimentaG4(){
 		 */
 		//joga:
 	//}
+	bool jogadaRealizada = false;
+	bool jogadaPossivel = false;
+	int distancia = calculaDistancia();
 
-}
+	/* while (!jogadaRealizada){
+		if(g4posy < posy){
+			v4=0;
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			cerr << v4 << " " << jogadaPossivel << endl;
+			if(!jogadaPossivel){
+				while (!jogadaPossivel){
+					v4 = rand() % 4;
+					jogadaPossivel = possivel(v4, g4i, g4j);
+				}
+			}
+			movimenta4(jogadaPossivel, jogadaRealizada);								
+		}else if(g4posy > posy){
+			v4=1;
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			cerr << v4 << " " << jogadaPossivel << endl;
+			if(!jogadaPossivel){
+				while(!jogadaPossivel){
+					v4 = rand() % 4;
+					jogadaPossivel = possivel(v4, g4i, g4j);
+					cerr << v4 << " " << jogadaPossivel << endl;
+				}
+			}
+			movimenta4(jogadaPossivel, jogadaRealizada);
+		}else if(g4posx < posx){
+			v4=2;
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			cerr << v4 << " " << jogadaPossivel << endl;
+			if(!jogadaPossivel){
+				while(!jogadaPossivel){
+					v4 = rand() % 4;
+					jogadaPossivel = possivel(v4, g4i, g4j);
+				}
+			}
+			movimenta4(jogadaPossivel, jogadaRealizada);
+		}else if(g4posx > posx){
+			v4=3;
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			cerr << v4 << " " << jogadaPossivel << endl;
+			if(!jogadaPossivel){
+				while(!jogadaPossivel){
+					v4 = rand() % 4;
+					jogadaPossivel = possivel(v4, g4i, g4j);
+				}
+			}
+			movimenta4(jogadaPossivel, jogadaRealizada);
+		}  */
+		//bool jogadaPossivel = false;
+	//}
+
+//------------------------------------------------------------------------------------------------------
+
+
+	//while(!jogadaRealizada){
+		/* if(g4posy < posy || v4 == 0){
+			v4=0;
+			inicio_0:
+			jogadaPossivel = possivel(v4, g4i, g4j);
+
+			if(jogadaPossivel){
+				movimenta4(jogadaPossivel, jogadaRealizada);
+			}else{
+				v4 = rand() % 4;
+				goto inicio_0;
+			}
+		}
+
+		if(g4posy > posy || v4 == 1){
+			v4=1;
+			inicio_1:
+			jogadaPossivel = possivel(v4, g4i, g4j);
+
+			if(jogadaPossivel){
+				movimenta4(jogadaPossivel, jogadaRealizada);
+			}else{
+				v4 = rand() % 4;
+				goto inicio_1;
+			}
+		}
+
+		if(g4posx < posx || v4 == 2){
+			v4 = 2;
+			inicio_2:
+			jogadaPossivel = possivel(v4, g4i, g4j);
+
+			if(jogadaPossivel){
+				movimenta4(jogadaPossivel, jogadaRealizada);
+			}else{
+				v4 = rand() % 4;
+				goto inicio_2;
+			}
+		}
+
+		if(g4posx > posx || v4 == 3){
+			v4 = 3;
+			inicio_3:
+			jogadaPossivel = possivel(v4, g4i, g4j);
+
+			if(jogadaPossivel){
+				movimenta4(jogadaPossivel, jogadaRealizada);
+			}else{
+				v4 = rand() % 4;
+				goto inicio_3;
+			}
+		} */
+
+
+	//}	
+
+	while (!jogadaRealizada){
+		if(posy < g4posy){ // Se o pacman tiver mais alto que o fantasma
+			v4 = 0;			// Jogada pra cima
+			jogadaPossivel = possivel(v4, g4i, g4j); // Se subir for possível
+			if(jogadaPossivel){
+				movimenta4(jogadaPossivel, jogadaRealizada); // Sobe
+			}else{									// Se não for
+				v4 = rand() % 10;					// Tira no par ou impar 
+				if (v4%2 == 0){						// Se for par, vai pra direita
+					v4 = 2;
+					jogadaPossivel = possivel(v4, g4i, g4j);
+					if(jogadaPossivel){
+						movimenta4(jogadaPossivel, jogadaRealizada);
+					}
+				}else{								// Senão, vai pra esquerda
+					v4 = 3;
+					jogadaPossivel = possivel(v4, g4i, g4j);
+					if(jogadaPossivel){
+						movimenta4(jogadaPossivel, jogadaRealizada);
+					}
+				}
+				
+			}
+		}
+		if(posy > g4posy){
+			v4 = 1;
+			jogadaPossivel = possivel(v4, g4i, g4j);
+			if(jogadaPossivel){
+				movimenta4(jogadaPossivel, jogadaRealizada);
+			}else{
+				v4 = rand() % 10;
+				if(v4%2 == 0){
+					v4 = 2;
+					jogadaPossivel = possivel(v4, g4i, g4j);
+					if(jogadaPossivel){
+						movimenta4(jogadaPossivel, jogadaRealizada);
+					}
+				}else{
+					v4 = 3;
+					jogadaPossivel = possivel(v4, g4i, g4j);
+					if(jogadaPossivel){
+						movimenta4(jogadaPossivel, jogadaRealizada);
+					}
+				}
+			}
+		}
+		if(posy == g4posy){
+			if(posx < g4posx){
+				v4 = 2;
+				jogadaPossivel = possivel(v4, g4i, g4j);
+				if(jogadaPossivel){
+					movimenta4(jogadaPossivel, jogadaRealizada);
+				}else{
+					v4 = rand() % 10;
+					if(v4%2 == 0){
+						v4 = 0;
+						jogadaPossivel = possivel(v4, g4i, g4j);
+						if(jogadaPossivel){
+							movimenta4(jogadaPossivel, jogadaRealizada);
+						}
+					}else{
+						v4 = 1;
+						jogadaPossivel = possivel(v4, g4i, g4j);
+						if(jogadaPossivel){
+							movimenta4(jogadaPossivel, jogadaRealizada);
+						}
+					}
+				}
+			}else{
+				v4 = 3;
+				jogadaPossivel = possivel(v4, g4i, g4j);
+				if(jogadaPossivel){
+					movimenta4(jogadaPossivel, jogadaRealizada);
+				}else{
+					v4 = rand() % 10;
+					if(v4%2 == 0){
+						v4 = 2;
+						jogadaPossivel = possivel(v4, g4i, g4j);
+						if(jogadaPossivel){
+							movimenta4(jogadaPossivel, jogadaRealizada);
+						}
+					}else{
+						v4 = 3;
+						jogadaPossivel = possivel(v4, g4i, g4j);
+						if(jogadaPossivel){
+							movimenta4(jogadaPossivel, jogadaRealizada);
+						}
+					}
+				}
+			}
+		}
+	}
+} 
+
+
+
 //--------------------------------------------------------------------------------------------
 
 int main(int argc, char** argv){
@@ -597,8 +846,7 @@ int main(int argc, char** argv){
 				movimentaG1();
 				movimentaG2();
 				movimentaG3();
-				cout << "Veio aqui!" << endl;
-				//movimentaG4();
+				movimentaG4();
 			}
 		} else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			break;
